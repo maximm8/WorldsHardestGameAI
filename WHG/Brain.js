@@ -1,5 +1,7 @@
-class Brain {
-  constructor(size){
+class Brain 
+{
+  constructor(size)
+  {
     this.directions = [];
     this.step =0;
     this.randomize(size);
@@ -43,9 +45,11 @@ class Brain {
 
   //-------------------------------------------------------------------------------------------------------------------------------------
   //returns a perfect copy of this brain object
-  clone() {
+  clone() 
+  {
     var clone = new Brain(this.directions.length);
-    for (var i = 0; i < this.directions.length; i++) {
+    for (var i = 0; i < this.directions.length; i++) 
+    {
       clone.directions[i] = this.directions[i].copy();
     }
     return clone;
@@ -54,15 +58,20 @@ class Brain {
   //----------------------------------------------------------------------------------------------------------------------------------------
 
   //mutates the brain by setting some of the directions to random vectors
-  mutate(died, deathStep) {
+  mutate(died, deathStep) 
+  {
     //chance that any vector in directions gets changed
-    for (var i =0; i< this.directions.length; i++) {
+    for (var i =0; i< this.directions.length; i++) 
+	  {
       var rand = random(1);
-      if (died && i > deathStep - 10) {
+	  
+      if (died && i > deathStep - 10) 
+	    {
         rand = random(0.2);
       }
 
-      if (rand < mutationRate) {
+      if (rand < mutationRate) 
+	    {
         //set this direction as a random direction
         this.directions[i] = this.getRandomDirection();
       }
@@ -71,9 +80,11 @@ class Brain {
 
   //---------------------------------------------------------------------------------------------------------------------------------------------------------
   //increases the number of elements in directions by 5
- increaseMoves() {
-   for(var i = 0 ; i< increaseMovesBy ;i++){
+ increaseMoves() 
+ {
+   for(var i = 0 ; i< increaseMovesBy ;i++)
+   {
      this.directions.push(this.getRandomDirection());
    }
-  }
+}
 }

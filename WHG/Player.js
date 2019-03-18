@@ -38,29 +38,40 @@ class Player{
     stroke(0);
   }
 
-  move(){
-    if (!humanPlaying){
-      if (this.moveCount == 0) {//move in the direction for 6 frames
-        if (this.brain.directions.length > this.brain.step) {//if there are still directions left then set the velocity as the next PVector in the direcitons array
+  move()
+  {
+    if (!humanPlaying)
+    {
+      if (this.moveCount == 0) 
+      {//move in the direction for 6 frames
+        if (this.brain.directions.length > this.brain.step) 
+        {//if there are still directions left then set the velocity as the next PVector in the direcitons array
           this.vel = this.brain.directions[this.brain.step];
           this.brain.step++;
-        } else {//if at the end of the directions array then the player is dead
+        } 
+        else 
+        {//if at the end of the directions array then the player is dead
           this.dead = true;
           this.fading = true;
         }
-        this.moveCount =6;
-      } else {
+
+        this.moveCount = 5;
+      } 
+      else 
+      {
         this.moveCount--;
       }
     }
+
     var temp = createVector(this.vel.x, this.vel.y);
     temp.normalize();
     temp.mult(this.playerSpeed);
-    for (var i = 0; i< solids.length; i++) {
+    for (var i = 0; i< solids.length; i++) 
+    {
       temp = solids[i].restrictMovement(this.pos, createVector(this.pos.x+this.size, this.pos.y+this.size), temp);
     }
-    this.pos.add(temp);
 
+    this.pos.add(temp);
   }
 
   //checks if the player
@@ -99,9 +110,13 @@ checkCollisions() {
 //----------------------------------------------------------------------------------------------------------------------------------------------------------
 
  calculateFitness() {
-  if (this.reachedGoal) {//if the dot reached the goal then the fitness is based on the amount of steps it took to get there
-    this.fitness = 1.0/16.0 + 10000.0/(this.brain.step * this.brain.step);
-  } else {//if the dot didn't reach the goal then the fitness is based on how close it is to the goal
+  if (this.reachedGoal) 
+  {//if the dot reached the goal then the fitness is based on the amount of steps it took to get there
+    //this.fitness = 1.0/16.0 + 10000.0/(this.brain.step * this.brain.step);
+    this.fitness = 10000.0/(this.brain.step * this.brain.step);
+  }
+  else 
+  {//if the dot didn't reach the goal then the fitness is based on how close it is to the goal
     var estimatedDistance = 0.0;//the estimated distance of the path from the player to the goal
     for (var i = this.nodes.length-1; i>=0; i--) {
       if (!this.nodes[i].reached) {

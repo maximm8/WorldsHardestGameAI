@@ -2,6 +2,8 @@ var tileSize = 50;
 var xoff = 80;
 var yoff = 100;
 
+var generation_update_counter = 0;
+
 //human playing vars
 var humanPlaying = false;
 var left = false;
@@ -26,7 +28,7 @@ var genPlayer;
 var upToGenPos = 0;
 
 //population vars
-var numberOfSteps = 10;
+var numberOfSteps = 1000/5;
 var testPopulation;
 
 var winCounter = -1;
@@ -55,27 +57,30 @@ var speedMinus;
 //increaseMoves
 var movesH3;
 
-var increaseMovesBy =5;
+var increaseMovesBy = 200/5;//5
 var movesPara;
 var movesPlus;
 var movesMinus;
 
-var increaseEvery =5;
+var increaseEvery = 5;
 var everyPara;
 var everyPlus;
 var everyMinus;
 
-function setup() {
+function setup() 
+{
   var canvas = createCanvas(1280,720);
   htmlStuff();
-  for (var i = 0; i< 22; i++) {
+  for (var i = 0; i< 22; i++) 
+  {
     tiles[i] = [];
-    for (var j = 0; j< 10; j++) {
+    for (var j = 0; j< 10; j++) 
+    {
       tiles[i][j] = new Tile(i, j);
     }
   }
 
-  setLevel1Walls();
+   setLevel1Walls();
    setLevel1Goal();
    setLevel1SafeArea();
    setEdges();
@@ -102,7 +107,8 @@ function draw(){
  writeShit();
 
 
- if (humanPlaying) {//if the user is controlling the square
+ if (humanPlaying) 
+ {//if the user is controlling the square
    if ((p.dead && p.fadeCounter<=0) || p.reachedGoal) {
      //reset player and dots
      if(p.reachedGoal){
@@ -122,8 +128,10 @@ function draw(){
      p.update();
      p.show();
    }
- } else
-   if (replayGens) {//if replaying the best generations
+ } 
+ else
+   if (replayGens) 
+   {//if replaying the best generations
      if ((genPlayer.dead && genPlayer.fadeCounter <=0) || genPlayer.reachedGoal) { //if the current gen is done
        upToGenPos ++;//next gen
        if (testPopulation.genPlayers.length <= upToGenPos) {//if reached the final gen
@@ -146,8 +154,11 @@ function draw(){
        genPlayer.update();
        genPlayer.show();
      }
-   } else//if training normaly
-     if (testPopulation.allPlayersDead()) {
+   } 
+   else
+   {//if training normaly
+     if (testPopulation.allPlayersDead()) 
+     {
        //genetic algorithm
        testPopulation.calculateFitness();
        testPopulation.naturalSelection();
@@ -156,20 +167,28 @@ function draw(){
       resetDots();
 
        //every 5 generations incease the number of moves by 5
-       if (testPopulation.gen % increaseEvery ==0) {
+       if (testPopulation.gen % increaseEvery ==0) 
+       {
          testPopulation.increaseMoves();
        }
 
-     } else {
+       this.generation_update_counter = 0;
+     } 
+     else 
+     {
 
        // moveAndShowDots();
        //update and show population
 
-       for(var j = 0 ; j< evolutionSpeed; j++){
-         for (var i = 0; i < dots.length; i ++) {
+       for(var j = 0 ; j< evolutionSpeed; j++)
+       {
+         for (var i = 0; i < dots.length; i ++) 
+         {
            dots[i].move();
          }
+
          testPopulation.update();
+         this.generation_update_counter++;         
        }
 
        for (var i = 0; i < dots.length; i ++) {
@@ -177,6 +196,7 @@ function draw(){
        }
        testPopulation.show();
      }
+    }
 
 }
 function moveAndShowDots(){
@@ -217,15 +237,18 @@ function saveDots(){
   }
 }
 
-function writeShit(){
+function writeShit()
+{
 
   fill(247, 247, 255);
   textSize(20);
   noStroke();
   text(" \tPress P to play the game yourself \t\t\t\t\t\t\t\t Press G to replay evolution highlights",250,620 );
   text("Press SPACE to only show the best player", 450,680);
+  text("updates:"+this.generation_update_counter, 450,710);
   textSize(36);
-  if(winCounter > 0){
+  if(winCounter > 0
+    ){
 
     if(flip){
       push();
@@ -253,8 +276,11 @@ function writeShit(){
     text("Number of moves: " + genPlayer.brain.directions.length, 700, 90);
   } else if(!humanPlaying) {
     text("Generation: " + testPopulation.gen, 200, 90);
-    if(testPopulation.solutionFound){
+    if(testPopulation.solutionFound)
+    {
       text("Wins in " + testPopulation.minStep + " moves",700, 90);
+      text("Wins: " + testPopulation.reachedGoalNB, 700, 120);
+
     }else{
       text("Number of moves: " + testPopulation.players[0].brain.directions.length, 700, 90);
     }
@@ -461,7 +487,7 @@ function minusSpeed(){
   }
 }
 function plusSpeed(){
-  if(evolutionSpeed <= 5){
+  if(evolutionSpeed < 10){
     evolutionSpeed += 1;
     speedPara.html("Evolution Player Speed: " + evolutionSpeed);
 
